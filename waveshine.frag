@@ -113,7 +113,7 @@ void main()
     
     col = pow(col, vec3(.4545));	// gamma correction
     
-    vec4 color = vec4(col,1.0);
+    vec4 color = vec4(vec3(col), 1.0);
 
     // float theta = asin((uv.y - 0.5) / length(vec2(0.5) - uv)) * diffusion;
 
@@ -126,7 +126,12 @@ void main()
 
     vec2 to_center = vec2(0.5) - rotated_position;
 
-    to_center = to_center * delay_ms * 0.1 + 0.05 * delay_ms * scatter * sin(uv.x * 111.0*TAU);
+    to_center = to_center * length(to_center) * delay_ms * 0.3 + 0.05 * delay_ms * scatter * sin(uv.x * 1112.0*TAU);
 
-    gl_FragColor = color + texture2D(feedback_texture, uv - to_center) * feedback;
+    vec2 new_position = clamp(uv - to_center, 0.0, 1.0);
+    // vec2 new_position = uv - to_center;
+
+    gl_FragColor = color + texture2D(feedback_texture, new_position) * sqrt(sqrt(feedback));
+    // gl_FragColor = mix(color, texture2D(feedback_texture, clamp(uv - to_center, 0.0, 1.0)), feedback);
+
 }

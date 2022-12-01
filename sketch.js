@@ -6,6 +6,7 @@ let feedback_slider;
 let diffusion_slider;
 
 let waveshine_shader;
+let color_shader;
 
 const FPS = 30;
 const DIM = 512;
@@ -13,9 +14,9 @@ const DIM = 512;
 function setup() {
     const canvas = createCanvas(DIM, DIM, WEBGL);
     delay_ms_slider = createSlider(0, 1, 0.5, 0);
-    scatter_slider = createSlider(0, 1, 0.5, 0);
-    feedback_slider = createSlider(0, 1, 0.5, 0);
-    diffusion_slider = createSlider(0, 1, 0.5, 0);
+    scatter_slider = createSlider(0, 1, 0.0, 0);
+    feedback_slider = createSlider(0, 1, 0.8, 0);
+    diffusion_slider = createSlider(0, 1, 0.0, 0);
     feedback_slider.position(45, 0);
     diffusion_slider.position(45, 20);
     delay_ms_slider.position(45, 572);
@@ -33,6 +34,7 @@ function setup() {
     fbo_2 = new p5Fbo({renderer: canvas, width: DIM, height: DIM, wrapMode: REPEAT, floatTexture: true});
     frameRate(FPS);
     waveshine_shader = loadShader("sketch.vert", "waveshine.frag");
+    color_shader = loadShader("sketch.vert", "color.frag");
 }
 
 function draw() {
@@ -57,6 +59,13 @@ function draw() {
     fbo.end();
 
     fbo.copyTo(fbo_2);
+
+    fbo.begin();
+    clear();
+    color_shader.setUniform("input_texture", fbo_2.getTexture());
+    shader(color_shader);
+    quad(-1, -1, 1, -1, 1, 1, -1, 1);
+    fbo.end();
 
     fbo.draw();
 
