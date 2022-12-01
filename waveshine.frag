@@ -126,10 +126,10 @@ void main()
 
     vec2 to_center = vec2(0.5) - rotated_position;
 
-    to_center = to_center * length(to_center) * delay_ms * 0.3 + 0.05 * delay_ms * scatter * sin(uv.x * 1112.0*TAU);
+    to_center = to_center * delay_ms * 0.1 + 0.05 * delay_ms * scatter * sin(uv.x * 1112.0*TAU);
 
-    vec2 new_position = clamp(uv - to_center, 0.0, 1.0);
-    // vec2 new_position = uv - to_center;
+    // vec2 new_position = clamp(uv - to_center, 0.0, 1.0);
+    vec2 new_position = uv - to_center;
 
     gl_FragColor = color + texture2D(feedback_texture, new_position) * sqrt(sqrt(feedback));
     // gl_FragColor = mix(color, texture2D(feedback_texture, clamp(uv - to_center, 0.0, 1.0)), feedback);
